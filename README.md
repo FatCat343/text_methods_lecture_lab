@@ -7,3 +7,7 @@
       http://localhost:8090/tm-frontend/login
   2. Проверить состояние backend:
       http://localhost:8089/tm-backend/rest/health_check
+
+Логин/пароль администратора: admin/setup
+
+Веб клиент для БД: http://localhost:8085
