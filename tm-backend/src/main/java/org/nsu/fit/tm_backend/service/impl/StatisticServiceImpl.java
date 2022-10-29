@@ -55,6 +55,7 @@ public class StatisticServiceImpl implements StatisticService {
 
         var result = new StatisticPerCustomerBO();
         result.setOverallBalance(customer.balance);
+        result.setCustomerId(customer.id);
 
         var subscriptions = subscriptionService.getSubscriptions(customerId);
         var subscriptionIds = new HashSet<UUID>();
