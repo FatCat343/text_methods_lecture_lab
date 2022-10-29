@@ -45,6 +45,14 @@ public class CustomerServiceImpl implements CustomerService {
             throw new IllegalArgumentException("Password is very easy.");
         }
 
+        if (customer.login == null) {
+            throw new IllegalArgumentException("Field 'customer.login' is null.");
+        }
+
+        if (isLoginAlreadyInUse(customer.login)) {
+            throw new IllegalArgumentException("Provided login is already in use.");
+        }
+
         // Лабораторная 2: добавить код который бы проверял, что нет customer'а c таким же login (email'ом).
         // Попробовать добавить другие ограничения, посмотреть как быстро растет кодовая база тестов.
 
@@ -109,5 +117,9 @@ public class CustomerServiceImpl implements CustomerService {
         repository.editCustomer(customer);
 
         return customer;
+    }
+
+    private boolean isLoginAlreadyInUse(String login) {
+        return repository.getCustomerByLogin(login) != null;
     }
 }
