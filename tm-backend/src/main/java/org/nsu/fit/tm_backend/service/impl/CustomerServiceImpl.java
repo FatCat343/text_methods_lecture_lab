@@ -2,6 +2,8 @@ package org.nsu.fit.tm_backend.service.impl;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
@@ -49,14 +51,25 @@ public class CustomerServiceImpl implements CustomerService {
             throw new IllegalArgumentException("Field 'customer.login' is null.");
         }
 
+        if (!patternMatches(customer.login)) {
+            throw new IllegalArgumentException("Provided login/email contains forbidden symbols.");
+        }
+
         if (isLoginAlreadyInUse(customer.login)) {
             throw new IllegalArgumentException("Provided login is already in use.");
         }
 
         // Лабораторная 2: добавить код который бы проверял, что нет customer'а c таким же login (email'ом).
         // Попробовать добавить другие ограничения, посмотреть как быстро растет кодовая база тестов.
-
         return repository.createCustomer(customer);
+    }
+
+    public static boolean patternMatches(String emailAddress) {
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        return Pattern.compile(regexPattern)
+                .matcher(emailAddress)
+                .matches();
     }
 
     /**
