@@ -10,10 +10,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.nsu.fit.tm_backend.repository.Repository;
+import org.nsu.fit.tm_backend.repository.data.ContactPojo;
 import org.nsu.fit.tm_backend.repository.data.CustomerPojo;
 import org.nsu.fit.tm_backend.repository.data.SubscriptionPojo;
 import org.nsu.fit.tm_backend.service.data.StatisticPerCustomerBO;
 import org.nsu.fit.tm_backend.service.impl.CustomerServiceImpl;
+import org.nsu.fit.tm_backend.service.impl.auth.data.AuthenticatedUserDetails;
+import org.nsu.fit.tm_backend.shared.Authority;
+import org.nsu.fit.tm_backend.shared.Globals;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -370,4 +374,56 @@ class CustomerServiceImplTest {
         verify(repository, times(0)).deleteCustomer(any());
     }
 
+    @Test
+    void testMeReturnsOnlyContactInformation() {
+        // arrange
+        AuthenticatedUserDetails customerDetails = new AuthenticatedUserDetails(
+                "1",
+                "customer_login",
+                new HashSet<String>() {{ add(Authority.CUSTOMER_ROLE); }}
+        );
+
+        CustomerPojo customerPojo = new CustomerPojo();
+        customerPojo.id = UUID.randomUUID();
+        customerPojo.firstName = "John";
+        customerPojo.lastName = "Wick";
+        customerPojo.login = "customer_login";
+        customerPojo.pass = "a23afd01-";
+        customerPojo.balance = 0;
+
+        ContactPojo expectedContactPojo = new ContactPojo();
+        expectedContactPojo.firstName = "John";
+        expectedContactPojo.lastName = "Wick";
+        expectedContactPojo.login = "customer_login";
+        expectedContactPojo.pass = "a23afd01-";
+        expectedContactPojo.balance = 0;
+
+        when(repository.getCustomerByLogin("customer_login")).thenReturn(customerPojo);
+
+        // act
+        ContactPojo actualContactPojo = customerService.me(customerDetails);
+
+        //assert
+        assertEquals(actualContactPojo, expectedContactPojo);
+    }
+
+    @Test
+    void testMeReturnsEmptyDtoWithLoginForAdmin() {
+        // arrange
+        AuthenticatedUserDetails adminDetails = new AuthenticatedUserDetails(
+                "1",
+                "admin",
+                new HashSet<String>() {{ add(Authority.ADMIN_ROLE); }}
+                );
+
+        // act
+        ContactPojo actualContact = customerService.me(adminDetails);
+
+        // assert
+        assertNull(actualContact.firstName);
+        assertNull(actualContact.lastName);
+        assertEquals(Globals.ADMIN_LOGIN, actualContact.login);
+        assertNull(actualContact.pass);
+        assertEquals(0, actualContact.balance);
+    }
 }
