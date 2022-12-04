@@ -27,7 +27,7 @@ public class CreateCustomerAdminLoginNameTest {
     @Severity(SeverityLevel.BLOCKER)
     public void failsWithAdminLoginName() {
         ContactPojo contactPojo = new ContactFixtureBuilder()
-                .setFirstName("admin")
+                .setLogin("admin")
                 .build();
 
         CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
