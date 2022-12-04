@@ -31,7 +31,7 @@ public class CreateCustomerRequestCapitalLettersNameTest {
                 .build();
 
         CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
-        Assert.assertNotNull(customerPojo);
+        Assert.assertNull(customerPojo);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class CreateCustomerRequestCapitalLettersNameTest {
                 .build();
 
         CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
-        Assert.assertNotNull(customerPojo);
+        Assert.assertNull(customerPojo);
     }
 
     @Test

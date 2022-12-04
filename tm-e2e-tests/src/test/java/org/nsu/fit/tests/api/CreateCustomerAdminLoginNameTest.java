@@ -31,6 +31,6 @@ public class CreateCustomerAdminLoginNameTest {
                 .build();
 
         CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
-        Assert.assertNotNull(customerPojo);
+        Assert.assertNull(customerPojo);
     }
 }
