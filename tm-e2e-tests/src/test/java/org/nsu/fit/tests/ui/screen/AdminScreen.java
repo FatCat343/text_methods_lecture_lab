@@ -2,6 +2,7 @@ package org.nsu.fit.tests.ui.screen;
 
 import org.nsu.fit.services.browser.Browser;
 import org.nsu.fit.shared.Screen;
+import org.openqa.selenium.By;
 
 public class AdminScreen extends Screen {
     public AdminScreen(Browser browser) {
@@ -9,7 +10,21 @@ public class AdminScreen extends Screen {
     }
 
     public CreateCustomerScreen createCustomer() {
-        // TODO: Please implement this...
+        browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"));
+        browser.click(By.xpath("//button[@title = 'Add Customer']"));
         return new CreateCustomerScreen(browser);
+    }
+
+    public CreatePlanScreen createPlan() {
+        browser.waitForElement(By.xpath("//button[@title = 'Add plan']"));
+        browser.click(By.xpath("//button[@title = 'Add plan']"));
+        return new CreatePlanScreen(browser);
+    }
+
+    public LoginScreen logout() {
+        browser.waitForElement(By.linkText("Logout"));
+        browser.click(By.linkText("Logout"));
+        browser.waitForElement(By.xpath("//div[@class='Login']"));
+        return new LoginScreen(browser);
     }
 }

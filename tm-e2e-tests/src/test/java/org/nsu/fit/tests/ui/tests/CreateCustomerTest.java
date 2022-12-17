@@ -1,8 +1,10 @@
-package org.nsu.fit.tests.ui;
+package org.nsu.fit.tests.ui.tests;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import org.nsu.fit.services.fixtures.ContactFixtureBuilder;
+import org.nsu.fit.services.rest.data.ContactPojo;
 import org.nsu.fit.tests.ui.screen.LoginScreen;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -22,13 +24,16 @@ public class CreateCustomerTest {
     @Severity(SeverityLevel.BLOCKER)
     @Feature("Create customer feature")
     public void createCustomer() {
+        ContactPojo contactPojo = new ContactFixtureBuilder().build();
+
         new LoginScreen(browser)
                 .loginAsAdmin()
                 .createCustomer()
-                .fillEmail("john_wick@example.com")
-                .fillPassword("Baba_Jaga")
-                .fillFirstName("John")
-                .fillLastName("Wick");
+                .fillEmail(contactPojo.login)
+                .fillPassword(contactPojo.pass)
+                .fillFirstName(contactPojo.firstName)
+                .fillLastName(contactPojo.lastName)
+                .clickSubmit();
 
         // Лабораторная 4: Проверить что customer создан с ранее переданными полями.
         // Решить проблему с генерацией случайных данных.

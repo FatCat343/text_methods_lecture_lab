@@ -11,7 +11,6 @@ import org.testng.annotations.Test;
 public class AuthTest {
     private AccountTokenPojo adminToken;
 
-    // Лабораторная 3: Разобраться с аннотациями, как они влияют на итоговый отчет.
     @Test(description = "Authenticate as admin.")
     @Severity(SeverityLevel.BLOCKER)
     @Feature("Authentication feature.")

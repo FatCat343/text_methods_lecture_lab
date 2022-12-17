@@ -2,6 +2,9 @@ package org.nsu.fit.tests.ui.screen;
 
 import org.nsu.fit.services.browser.Browser;
 import org.nsu.fit.shared.Screen;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.testng.Assert;
 
 public class CreateCustomerScreen extends Screen {
     public CreateCustomerScreen(Browser browser) {
@@ -9,22 +12,22 @@ public class CreateCustomerScreen extends Screen {
     }
 
     public CreateCustomerScreen fillEmail(String email) {
-        // TODO: Please implement this...
+        browser.typeText(By.name("login"), email);
         return this;
     }
 
     public CreateCustomerScreen fillPassword(String password) {
-        // TODO: Please implement this...
+        browser.typeText(By.name("pass"), password);
         return this;
     }
 
     public CreateCustomerScreen fillFirstName(String firstName) {
-        // TODO: Please implement this...
+        browser.typeText(By.name("firstName"), firstName);
         return this;
     }
 
     public CreateCustomerScreen fillLastName(String lastName) {
-        // TODO: Please implement this...
+        browser.typeText(By.name("lastName"), lastName);
         return this;
     }
 
@@ -32,12 +35,24 @@ public class CreateCustomerScreen extends Screen {
     // когда при нажатии на кнопку Submit ('Create') не произойдет переход на AdminScreen,
     // а будет показана та или иная ошибка на текущем скрине.
     public AdminScreen clickSubmit() {
-        // TODO: Please implement this...
-        return new AdminScreen(browser);
+        browser.waitForElement(By.xpath("//button[@type = 'submit']"));
+        Assert.assertEquals(browser.currentPage(), "http://localhost:8090/tm-frontend/add-customer");
+        browser.click(By.xpath("//button[@type = 'submit']"));
+        try
+        {
+            browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"), 2);
+            return new AdminScreen(browser);
+        }
+        catch (TimeoutException e)
+        {
+            Assert.assertEquals(browser.currentPage(),"http://localhost:8090/tm-frontend/add-customer");
+            String message = browser.getText(By.xpath("/html/body/div[1]/div/div/div[1]"));
+            throw new TimeoutException(message);
+        }
     }
 
     public AdminScreen clickCancel() {
-        // TODO: Please implement this...
+        browser.click(By.xpath("//button[@type = 'button']"));
         return new AdminScreen(browser);
     }
 }

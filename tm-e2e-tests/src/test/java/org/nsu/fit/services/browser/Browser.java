@@ -1,15 +1,18 @@
 package org.nsu.fit.services.browser;
 
 import io.qameta.allure.Attachment;
+import org.nsu.fit.services.rest.data.CustomerPojo;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.Closeable;
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,9 +43,11 @@ public class Browser implements Closeable {
                 // Для того чтобы подобрать нужный chromedriver, необходимо посмотреть версию браузера Chrome
                 // на системе, на которой будут запускаться тесты и скачать соотвествующий ей chromedriver с сайта:
                 // https://chromedriver.chromium.org/downloads
-                System.setProperty("webdriver.chrome.driver", "C:/Tools/chromedriver/chromedriver.exe");
+                System.setProperty("webdriver.chrome.driver", "C:/Users/shaa6/Documents/study/test-methods-selenium/chromedriver.exe");
                 chromeOptions.setHeadless(Boolean.parseBoolean(System.getProperty("headless")));
                 webDriver = new ChromeDriver(chromeOptions);
+//                webDriver = new RemoteWebDriver(new URL("http://localhost:4445/wd/hub"), chromeOptions);
+
             } else {
                 File f = new File("/usr/bin/chromedriver");
                 if (f.exists()) {
@@ -100,6 +105,46 @@ public class Browser implements Closeable {
     public boolean isElementPresent(By element) {
         makeScreenshot();
         return webDriver.findElements(element).size() != 0;
+    }
+
+    public String getTextByElement(String xpath) {
+        return webDriver.findElement(By.xpath(xpath)).getText();
+    }
+
+    public String currentPage() {
+        return webDriver.getCurrentUrl();
+    }
+
+    public String getText(By element) {
+        makeScreenshot();
+        return webDriver.findElement(element).getText();
+    }
+
+    public int getCustomerIndex(CustomerPojo customerPojo) {
+        String pathToTable = "//*[@id=\"root\"]/div/div/div/div/div[1]/div[2]/div/div/div/table/tbody/";
+        while (true) {
+            List<WebElement> logins = webDriver.findElements(By.xpath(pathToTable + "tr/td[2]"));
+            List<WebElement> firstName = webDriver.findElements(By.xpath(pathToTable + "tr/td[3]"));
+            List<WebElement> lastName = webDriver.findElements(By.xpath(pathToTable + "tr/td[4]"));
+            WebElement button = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[1]/table/tfoot/tr/td/div/div[3]/span[4]/button"));
+            for (int i = 0; i < logins.size(); i++) {
+                if (customerPojo.login.equals(logins.get(i).getText())
+                        &&
+                        customerPojo.firstName.equals(firstName.get(i).getText())
+                        &&
+                        customerPojo.lastName.equals(lastName.get(i).getText())
+                ) {
+                    System.out.println("aaaaa " + i);
+                    return i;
+                }
+            }
+            if (!button.isEnabled()) {
+                break;
+            } else {
+                button.click();
+            }
+        }
+        return -1;
     }
 
     @Attachment(value = "Page screenshot", type = "image/png")

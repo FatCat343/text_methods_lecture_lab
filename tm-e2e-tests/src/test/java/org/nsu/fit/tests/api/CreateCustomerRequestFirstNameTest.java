@@ -11,6 +11,7 @@ import org.nsu.fit.services.rest.data.CustomerPojo;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.testng.asserts.Assertion;
 
 public class CreateCustomerRequestFirstNameTest {
     private RestClient restClient;
@@ -31,6 +32,12 @@ public class CreateCustomerRequestFirstNameTest {
                 .build();
 
         CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
+
+        Assert.assertEquals(customerPojo.firstName, contactPojo.firstName);
+        Assert.assertEquals(customerPojo.lastName, contactPojo.lastName);
+        Assert.assertEquals(customerPojo.pass, contactPojo.pass);
+        Assert.assertEquals(customerPojo.login, contactPojo.login);
+        Assert.assertEquals(customerPojo.balance, contactPojo.balance);
         Assert.assertNotNull(customerPojo);
     }
 
