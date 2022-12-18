@@ -34,19 +34,18 @@ public class TopUpBalanceTest {
     public void topUpBalanceTest() {
         AccountTokenPojo adminToken = restClient.authenticate("admin", "setup");
         ContactPojo contactPojo = new ContactFixtureBuilder().build();
-        CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
 
         AdminScreen screen = new LoginScreen(browser)
                 .loginAsAdmin()
                 .createCustomer()
-                .fillEmail(customerPojo.login)
-                .fillPassword(customerPojo.pass)
-                .fillFirstName(customerPojo.firstName)
-                .fillLastName(customerPojo.lastName)
+                .fillEmail(contactPojo.login)
+                .fillPassword(contactPojo.pass)
+                .fillFirstName(contactPojo.firstName)
+                .fillLastName(contactPojo.lastName)
                 .clickSubmit();
 
         CustomerScreen customerScreen = screen.logout()
-                .loginAsCustomer(customerPojo.login, customerPojo.pass);
+                .loginAsCustomer(contactPojo.login, contactPojo.pass);
 
         customerScreen
                 .topUpBalance()

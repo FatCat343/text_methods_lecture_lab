@@ -103,7 +103,7 @@ public class RestClient {
     private static class RestClientLogFilter implements ClientRequestFilter {
         @Override
         public void filter(ClientRequestContext requestContext) {
-            Logger.debug(requestContext.getEntity().toString());
+//            Logger.debug(requestContext.getEntity().toString());
 
             // Лабораторная 3: разобраться как работает данный фильтр
             // и добавить логирование METHOD и HEADERS.

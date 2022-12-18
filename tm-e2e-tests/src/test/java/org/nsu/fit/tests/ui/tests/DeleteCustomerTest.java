@@ -9,7 +9,6 @@ import org.nsu.fit.services.fixtures.ContactFixtureBuilder;
 import org.nsu.fit.services.rest.RestClient;
 import org.nsu.fit.services.rest.data.AccountTokenPojo;
 import org.nsu.fit.services.rest.data.ContactPojo;
-import org.nsu.fit.services.rest.data.CustomerPojo;
 import org.nsu.fit.tests.ui.screen.AdminScreen;
 import org.nsu.fit.tests.ui.screen.LoginScreen;
 import org.testng.Assert;
@@ -33,16 +32,16 @@ public class DeleteCustomerTest {
     public void deleteCustomer() {
         AccountTokenPojo adminToken = restClient.authenticate("admin", "setup");
         ContactPojo contactPojo = new ContactFixtureBuilder().build();
-        CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
+
         AdminScreen adminScreen = new LoginScreen(browser)
                 .loginAsAdmin()
                 .createCustomer()
-                .fillEmail(customerPojo.login)
-                .fillPassword(customerPojo.pass)
-                .fillFirstName(customerPojo.firstName)
-                .fillLastName(customerPojo.lastName)
+                .fillEmail(contactPojo.login)
+                .fillPassword(contactPojo.pass)
+                .fillFirstName(contactPojo.firstName)
+                .fillLastName(contactPojo.lastName)
                 .clickSubmit();
-        int customerIndex = browser.getCustomerIndex(customerPojo);
+        int customerIndex = browser.getContactIndex(contactPojo);
         Assert.assertNotEquals(-1, customerIndex);
         adminScreen.deleteCustomer(customerIndex);
     }

@@ -34,17 +34,17 @@ public class CustomerSubscribeTest {
     public void beforeClass() {
         browser = BrowserService.openNewBrowser();
         restClient = new RestClient();
-        AccountTokenPojo adminToken = restClient.authenticate("admin", "setup");
+//        AccountTokenPojo adminToken = restClient.authenticate("admin", "setup");
         ContactPojo contactPojo = new ContactFixtureBuilder().build();
-        CustomerPojo customerPojo = restClient.createCustomer(adminToken, contactPojo);
         PlanPojo planPojo = new PlanFixtureBuilder().build();
+
         AdminScreen screen = new LoginScreen(browser)
                 .loginAsAdmin()
                 .createCustomer()
-                .fillEmail(customerPojo.login)
-                .fillPassword(customerPojo.pass)
-                .fillFirstName(customerPojo.firstName)
-                .fillLastName(customerPojo.lastName)
+                .fillEmail(contactPojo.login)
+                .fillPassword(contactPojo.pass)
+                .fillFirstName(contactPojo.firstName)
+                .fillLastName(contactPojo.lastName)
                 .clickSubmit()
                 .createPlan()
                 .fillName(planPojo.name)
@@ -52,8 +52,9 @@ public class CustomerSubscribeTest {
                 .fillFee(planPojo.fee)
                 .clickSubmit();
         screen.logout();
-        login = customerPojo.login;
-        pass = customerPojo.pass;
+
+        login = contactPojo.login;
+        pass = contactPojo.pass;
     }
 
     @Test(description = "Subscribe to plan via UI.")

@@ -1,19 +1,18 @@
 package org.nsu.fit.services.browser;
 
 import io.qameta.allure.Attachment;
+import org.nsu.fit.services.rest.data.ContactPojo;
 import org.nsu.fit.services.rest.data.CustomerPojo;
 import org.nsu.fit.services.rest.data.PlanPojo;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.Closeable;
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -121,7 +120,7 @@ public class Browser implements Closeable {
         return webDriver.findElement(element).getText();
     }
 
-    public int getCustomerIndex(CustomerPojo customerPojo) {
+    public int getContactIndex(ContactPojo contactPojo) {
         String pathToTable = "//*[@id=\"root\"]/div/div/div/div/div[1]/div[2]/div/div/div/table/tbody/";
         while (true) {
             List<WebElement> logins = webDriver.findElements(By.xpath(pathToTable + "tr/td[2]"));
@@ -129,11 +128,11 @@ public class Browser implements Closeable {
             List<WebElement> lastName = webDriver.findElements(By.xpath(pathToTable + "tr/td[4]"));
             WebElement button = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[1]/table/tfoot/tr/td/div/div[3]/span[4]/button"));
             for (int i = 0; i < logins.size(); i++) {
-                if (customerPojo.login.equals(logins.get(i).getText())
+                if (contactPojo.login.equals(logins.get(i).getText())
                         &&
-                        customerPojo.firstName.equals(firstName.get(i).getText())
+                        contactPojo.firstName.equals(firstName.get(i).getText())
                         &&
-                        customerPojo.lastName.equals(lastName.get(i).getText())
+                        contactPojo.lastName.equals(lastName.get(i).getText())
                 ) {
                     System.out.println("aaaaa " + i);
                     return i;

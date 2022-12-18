@@ -25,4 +25,7 @@ public class PlanPojo {
         this.details = details;
         this.fee = fee;
     }
+
+    public PlanPojo() {
+    }
 }
