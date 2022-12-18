@@ -2,6 +2,7 @@ package org.nsu.fit.services.browser;
 
 import io.qameta.allure.Attachment;
 import org.nsu.fit.services.rest.data.CustomerPojo;
+import org.nsu.fit.services.rest.data.PlanPojo;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -135,6 +136,32 @@ public class Browser implements Closeable {
                         customerPojo.lastName.equals(lastName.get(i).getText())
                 ) {
                     System.out.println("aaaaa " + i);
+                    return i;
+                }
+            }
+            if (!button.isEnabled()) {
+                break;
+            } else {
+                button.click();
+            }
+        }
+        return -1;
+    }
+
+    public int getPlanIndex(PlanPojo planPojo) {
+        String pathToTable = "//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div/div/div/table/tbody/";
+        while (true) {
+            List<WebElement> names = webDriver.findElements(By.xpath(pathToTable + "tr/td[2]"));
+            List<WebElement> details = webDriver.findElements(By.xpath(pathToTable + "tr/td[3]"));
+            List<WebElement> fees = webDriver.findElements(By.xpath(pathToTable + "tr/td[4]"));
+            WebElement button = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/table/tfoot/tr/td/div/div[3]/span[4]/button"));
+            for (int i = 0; i < names.size(); i++) {
+                if (planPojo.name.equals(names.get(i).getText())
+                        &&
+                        planPojo.details.equals(details.get(i).getText())
+                        &&
+                        planPojo.fee == Integer.parseInt(fees.get(i).getText())
+                ) {
                     return i;
                 }
             }

@@ -27,4 +27,20 @@ public class AdminScreen extends Screen {
         browser.waitForElement(By.xpath("//div[@class='Login']"));
         return new LoginScreen(browser);
     }
+    public void deletePlan(int planIndex) {
+        String pathToTable = "//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div/div/div/table/tbody/";
+        browser.waitForElement(By.xpath(pathToTable + "tr[" + (planIndex+1) + "]/td[1]/div/button"));
+        browser.click(By.xpath(pathToTable + "tr[" + (planIndex+1) + "]/td[1]/div/button"));
+        browser.waitForElement(By.xpath(pathToTable + "tr[" + (planIndex+1) + "]/td[1]/div/button"));
+        browser.click(By.xpath(pathToTable + "tr[" + (planIndex+1) + "]/td[1]/div/button"));
+    }
+
+    public AdminScreen deleteCustomer(int indexInCustomerTable) {
+        String pathToTable = "//*[@id=\"root\"]/div/div/div/div/div[1]/div[2]/div/div/div/table/tbody/";
+        browser.waitForElement(By.xpath(pathToTable + "tr[" + (indexInCustomerTable+1) + "]/td[1]/div/button"));
+        browser.click(By.xpath(pathToTable + "tr[" + (indexInCustomerTable+1) + "]/td[1]/div/button"));
+        browser.waitForElement(By.xpath(pathToTable + "tr[" + (indexInCustomerTable+1) + "]/td[1]/div/button"));
+        browser.click(By.xpath(pathToTable + "tr[" + (indexInCustomerTable+1) + "]/td[1]/div/button"));
+        return new AdminScreen(browser);
+    }
 }

@@ -1,12 +1,10 @@
 package org.nsu.fit.services.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.glassfish.jersey.client.ClientConfig;
 import org.nsu.fit.services.fixtures.ContactFixtureBuilder;
 import org.nsu.fit.services.log.Logger;
-import org.nsu.fit.services.rest.data.AccountTokenPojo;
-import org.nsu.fit.services.rest.data.ContactPojo;
-import org.nsu.fit.services.rest.data.CredentialsPojo;
-import org.nsu.fit.services.rest.data.CustomerPojo;
+import org.nsu.fit.services.rest.data.*;
 import org.nsu.fit.shared.JsonMapper;
 
 import javax.ws.rs.ProcessingException;
@@ -18,6 +16,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 public class RestClient {
     // Note: change url if you want to use the docker compose.
@@ -72,6 +71,33 @@ public class RestClient {
         }
 
         return JsonMapper.fromJson(response, responseType);
+    }
+
+    private static <R> R get(String path, TypeReference<R> responseType, AccountTokenPojo accountToken)
+            throws ProcessingException, WebApplicationException {
+        Invocation.Builder request = client
+                .target(REST_URI)
+                .path(path)
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        if (accountToken != null) {
+            request.header("Authorization", "Bearer " + accountToken.token);
+        }
+
+        String response;
+        try {
+            response = request.get(String.class);
+        } catch (ProcessingException | WebApplicationException exception) {
+            Logger.error(String.valueOf(exception));
+            throw exception;
+        }
+
+        return JsonMapper.fromJson(response, responseType);
+    }
+
+    public List<PlanPojo> getAvailablePlans(AccountTokenPojo accountToken) {
+        return get("available_plans",  new TypeReference<List<PlanPojo>>(){}, accountToken);
     }
 
     private static class RestClientLogFilter implements ClientRequestFilter {
